@@ -5,7 +5,7 @@
 | Due | Assignment | Portal Feature |
 |-----|------------|----------------|
 | Done | Project 1: Hello JS | Dashboard |
-| Jan 28 | Project 2: Random Generation | Demo Data Generator |
+| Feb 2 | Project 2: Random Generation | Demo Data Generator |
 | Feb 23 | Project 3: Message Log | Medication Dose Log |
 | Mar 25 | Project 4: Resourceful | Calendar CRUD |
 | Apr 8 | Deployment | Deploy with partner |
