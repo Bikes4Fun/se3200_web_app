@@ -264,3 +264,30 @@ main li {
 .btn-secondary:hover {
     background: var(--color-bg);
 }
+
+/* Project 2: Random Generator */
+.generator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.generator-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.generator-photo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 0.75rem;
+}
+
+main .muted {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}

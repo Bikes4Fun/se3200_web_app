@@ -1,6 +1,7 @@
 // Shared Nav Component - edit once, applies everywhere
 const navLinks = [
     { href: 'index.html', label: 'Dashboard' },
+    { href: 'generator.html', label: 'Random Data Generator' }, // project 2: random generator
     { href: 'settings.html', label: 'Settings' }
 ];
 
