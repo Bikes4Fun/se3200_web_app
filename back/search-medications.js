@@ -10,15 +10,20 @@ var SearchMedicationsAPI = (function () {
             var r = data.results && data.results[0];
             if (!r) return { name: name, fda: {} };
             var openfda = r.openfda || {};
+            var doseOpts = (r.dosage_forms_and_strengths && r.dosage_forms_and_strengths.length)
+                ? r.dosage_forms_and_strengths.map(function (s) { return String(s).slice(0, 80); })
+                : [];
             return {
                 name: name,
                 fda: {
                     purpose: (r.purpose && r.purpose[0]) ? r.purpose[0].slice(0, 500) : null,
                     dosage_and_administration: (r.dosage_and_administration && r.dosage_and_administration[0]) ? r.dosage_and_administration[0].slice(0, 500) : null,
                     warnings: (r.warnings && r.warnings[0]) ? r.warnings[0].slice(0, 500) : null,
+                    adverse_reactions: (r.adverse_reactions && r.adverse_reactions[0]) ? r.adverse_reactions[0].slice(0, 400) : null,
+                    drug_interactions: (r.drug_interactions && r.drug_interactions[0]) ? r.drug_interactions[0].slice(0, 400) : null,
                     generic_name: (openfda.generic_name && openfda.generic_name[0]) || null,
                     brand_name: (openfda.brand_name && openfda.brand_name[0]) || null,
-                    manufacturer_name: (openfda.manufacturer_name && openfda.manufacturer_name[0]) || null
+                    dose_options: doseOpts
                 }
             };
         }).catch(function () { return { name: name, fda: {} }; });

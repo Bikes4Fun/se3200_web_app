@@ -28,11 +28,13 @@
         var img = photoUrl ? '<img src="' + photoUrl + '" alt="" class="card-photo">' : '';
         var fda = med.fda || {};
         var schedule = (med.schedule || []).join(', ');
+        var dose = med.selected_dose ? '<p><strong>Dose:</strong> ' + escapeHtml(med.selected_dose) + '</p>' : '';
         var generic = fda.generic_name ? '<p><strong>Generic:</strong> ' + escapeHtml(fda.generic_name) + '</p>' : '';
         var brand = fda.brand_name && fda.brand_name !== med.name ? '<p><strong>Brand:</strong> ' + escapeHtml(fda.brand_name) + '</p>' : '';
-        var manufacturer = fda.manufacturer_name ? '<p><strong>Manufacturer:</strong> ' + escapeHtml(fda.manufacturer_name) + '</p>' : '';
+        var sideEffects = fda.adverse_reactions ? '<p class="fda-info"><strong>Side effects:</strong> ' + escapeHtml(fda.adverse_reactions.slice(0, 150).trim()) + (fda.adverse_reactions.length > 150 ? '…' : '') + '</p>' : '';
+        var interactions = fda.drug_interactions ? '<p class="fda-info"><strong>Drug interactions:</strong> ' + escapeHtml(fda.drug_interactions.slice(0, 150).trim()) + (fda.drug_interactions.length > 150 ? '…' : '') + '</p>' : '';
         var warningLine = fda.warnings ? '<p class="med-warnings"><strong>Note:</strong> ' + escapeHtml(fda.warnings.slice(0, 120).trim()) + (fda.warnings.length > 120 ? '…' : '') + '</p>' : '';
-        card.innerHTML = img + '<h2>' + escapeHtml(med.name) + '</h2><p><strong>Schedule:</strong> ' + schedule + '</p>' + generic + brand + manufacturer + warningLine;
+        card.innerHTML = img + '<h2>' + escapeHtml(med.name) + '</h2><p><strong>Schedule:</strong> ' + schedule + '</p>' + dose + generic + brand + sideEffects + interactions + warningLine;
         return card;
     }
 

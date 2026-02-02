@@ -3,13 +3,13 @@
 
 (function () {
     var MED_LIST = [
-        'Donepezil', 'Rivastigmine', 'Galantamine', 'Memantine', 'Namzaric', 'Aducanumab', 'Lecanemab',
+        'Donepezil', 'Rivastigmine', 'Galantamine', 'Memantine', 'Namzaric', 'Lecanemab',
         'Sertraline', 'Citalopram', 'Escitalopram', 'Mirtazapine', 'Trazodone', 'Quetiapine', 'Risperidone',
         'Olanzapine', 'Haloperidol', 'Buspirone', 'Melatonin', 'Lorazepam', 'Clonazepam', 'Zolpidem',
         'Lisinopril', 'Losartan', 'Metoprolol', 'Amlodipine', 'Atorvastatin', 'Simvastatin', 'Aspirin',
-        'Clopidogrel', 'Metformin', 'Insulin glargine', 'Insulin lispro', 'Levothyroxine', 'Furosemide',
+        'Clopidogrel', 'Metformin', 'Insulin glargine', 'Levothyroxine', 'Furosemide',
         'Hydrochlorothiazide', 'Omeprazole', 'Pantoprazole', 'Acetaminophen', 'Gabapentin', 'Oxybutynin',
-        'Tamsulosin', 'Finasteride', 'Vitamin D', 'Calcium carbonate', 'Docusate', 'Senna',
+        'Tamsulosin', 'Finasteride', 'Vitamin D', 'Calcium carbonate', 'Senna',
         'Polyethylene glycol', 'Albuterol'
     ];
     var SCHEDULE_TIMES = ['06:00', '08:00', '12:00', '14:00', '18:00', '20:00'];
@@ -80,7 +80,11 @@
         return SearchMedicationsAPI.search(medNames).then(function (data) {
             var list = (data && data.medications) || [];
             demoUserProfile.medications = list.map(function (m) {
-                return { name: m.name, schedule: randomSchedule(), fda: m.fda || {} }; // Random schedule per med
+                var fda = m.fda || {};
+                var opts = fda.dose_options && fda.dose_options.length ? fda.dose_options : [];
+                var selected_dose = opts.length ? pick(opts) : null; // User-selected dose (random for demo)
+                var display_name = fda.brand_name || m.name; // User chooses how to display (brand for demo)
+                return { name: m.name, display_name: display_name, schedule: randomSchedule(), selected_dose: selected_dose, fda: fda };
             });
             if (window.saveDemoUserToSession) window.saveDemoUserToSession();
             var payload = {
