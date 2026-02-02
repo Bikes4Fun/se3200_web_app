@@ -316,3 +316,14 @@ main .muted {
     font-size: 0.9rem;
     margin-top: 0.5rem;
 }
+
+.generator-fda {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
+}
+
+.generator-warnings {
+    color: var(--color-text);
+    font-size: 0.8rem;
+}

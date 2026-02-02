@@ -1,14 +1,36 @@
 // Project 2: Random Generator
 
+const MED_LIST = [
+    'Donepezil', 'Rivastigmine', 'Galantamine', 'Memantine', 'Namzaric', 'Aducanumab', 'Lecanemab',
+    'Sertraline', 'Citalopram', 'Escitalopram', 'Mirtazapine', 'Trazodone', 'Quetiapine', 'Risperidone',
+    'Olanzapine', 'Haloperidol', 'Buspirone', 'Melatonin', 'Lorazepam', 'Clonazepam', 'Zolpidem',
+    'Lisinopril', 'Losartan', 'Metoprolol', 'Amlodipine', 'Atorvastatin', 'Simvastatin', 'Aspirin',
+    'Clopidogrel', 'Metformin', 'Insulin glargine', 'Insulin lispro', 'Levothyroxine', 'Furosemide',
+    'Hydrochlorothiazide', 'Omeprazole', 'Pantoprazole', 'Acetaminophen', 'Gabapentin', 'Oxybutynin',
+    'Tamsulosin', 'Finasteride', 'Vitamin D', 'Calcium carbonate', 'Docusate', 'Senna',
+    'Polyethylene glycol', 'Albuterol'
+];
+
+const SCHEDULE_TIMES = ['06:00', '08:00', '12:00', '14:00', '18:00', '20:00'];
+
 (function () {
     const TITLES = ['Dr. Smith - Cardiology', 'Dr. Jones - Primary Care', 'Grocery shopping', 'Pharmacy pickup', 'Physical therapy', 'Dentist - Cleaning', 'Family visit', 'Lab work'];
     const LOCATIONS = ['123 Main St', '456 Oak Ave', '789 Medical Plaza', 'Downtown Pharmacy', 'Care Center'];
     const DRIVERS = ['Sarah', 'Mike', 'James', 'Maria', null];
-    const MED_NAMES = ['Lisinopril', 'Metformin', 'Donepezil', 'Memantine', 'Vitamin D3', 'Aspirin', 'Omeprazole', 'Atorvastatin'];
-    const DOSAGES = ['5 mg', '10 mg', '25 mg', '50 mg', '81 mg', '500 mg', '1000 mg', 'once daily'];
-    const SCHEDULE_TIMES = ['06:00', '08:00', '12:00', '14:00', '18:00', '20:00'];
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function pickN(arr, n) {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy.slice(0, n);
+    }
+    function randomSchedule() {
+        const times = SCHEDULE_TIMES.slice().sort(function () { return Math.random() - 0.5; });
+        return times.slice(0, 1 + Math.floor(Math.random() * 3)).sort();
+    }
     function randomInRange(min, max) { return min + Math.random() * (max - min); }
 
     function randomDate(daysFromNow) {
@@ -37,10 +59,6 @@
         };
     }
 
-    function buildMedication() {
-        const times = SCHEDULE_TIMES.slice().sort(function () { return Math.random() - 0.5; }).slice(0, 1 + Math.floor(Math.random() * 3));
-        return { name: pick(MED_NAMES), dosage: pick(DOSAGES), schedule: times.sort() };
-    }
 
     function renderCard(appt, photoUrl) {
         const card = document.createElement('div');
@@ -60,13 +78,23 @@
         const card = document.createElement('div');
         card.className = 'card generator-card';
         const img = photoUrl ? `<img src="${photoUrl}" alt="" class="generator-photo">` : '';
+        const fda = med.fda || {};
+        const purpose = fda.purpose ? '<p class="generator-fda"><strong>Uses:</strong> ' + escapeHtml(fda.purpose.slice(0, 300)) + (fda.purpose.length > 300 ? '…' : '') + '</p>' : '';
+        const dosage = fda.dosage_and_administration ? '<p class="generator-fda"><strong>Dosage:</strong> ' + escapeHtml(fda.dosage_and_administration.slice(0, 300)) + (fda.dosage_and_administration.length > 300 ? '…' : '') + '</p>' : '';
+        const warnings = fda.warnings ? '<p class="generator-fda generator-warnings"><strong>Warnings:</strong> ' + escapeHtml(fda.warnings.slice(0, 200)) + (fda.warnings.length > 200 ? '…' : '') + '</p>' : '';
         card.innerHTML = `
             ${img}
-            <h2>${med.name}</h2>
-            <p><strong>Dosage:</strong> ${med.dosage}</p>
-            <p><strong>Schedule:</strong> ${med.schedule.join(', ')}</p>
+            <h2>${escapeHtml(med.name)}</h2>
+            <p><strong>Schedule:</strong> ${(med.schedule || []).join(', ')}</p>
+            ${fda.generic_name ? '<p><strong>Generic:</strong> ' + escapeHtml(fda.generic_name) + '</p>' : ''}
+            ${purpose}${dosage}${warnings}
         `;
         return card;
+    }
+    function escapeHtml(s) {
+        const div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
     }
 
     let lastData = [];
@@ -79,7 +107,6 @@
         const countEl = document.getElementById('card-count');
         const btn = document.getElementById('generate-btn');
         const n = 3 + Math.floor(Math.random() * 5);
-        const m = 2 + Math.floor(Math.random() * 4);
         output.innerHTML = '';
         medOutput.innerHTML = '';
         medHeading.textContent = '';
@@ -88,21 +115,36 @@
         btn.disabled = true;
 
         lastData = Array.from({ length: n }, buildAppointment);
-        lastMedData = Array.from({ length: m }, buildMedication);
         const apptImgPromises = lastData.map(function () {
             return fetch('https://picsum.photos/80/80').then(function (r) { return r.blob(); }).then(function (b) { return URL.createObjectURL(b); }).catch(function () { return null; });
         });
-        const medImgPromises = lastMedData.map(function () {
-            return fetch('https://picsum.photos/80/80').then(function (r) { return r.blob(); }).then(function (b) { return URL.createObjectURL(b); }).catch(function () { return null; });
-        });
 
-        Promise.all([].concat(apptImgPromises, medImgPromises)).then(function (urls) {
-            lastData.forEach(function (appt, i) { output.appendChild(renderCard(appt, urls[i])); });
-            lastMedData.forEach(function (med, i) { medOutput.appendChild(renderMedCard(med, urls[n + i])); });
-            medHeading.textContent = 'Medications';
-            countEl.textContent = lastData.length + ' appointment(s), ' + lastMedData.length + ' medication(s) generated.';
+        // As a user: pick meds, search via API, add to profile
+        const medNames = pickN(MED_LIST, 3 + Math.floor(Math.random() * 5));
+        SearchMedicationsAPI.search(medNames).then(function (data) {
+            const searchResults = (data && data.medications) || [];
+            const toAdd = searchResults.map(function (m) {
+                return { name: m.name, schedule: randomSchedule(), fda: m.fda || {} };
+            });
+            lastMedData = toAdd;
+            const medImgPromises = lastMedData.map(function () {
+                return fetch('https://picsum.photos/80/80').then(function (r) { return r.blob(); }).then(function (b) { return URL.createObjectURL(b); }).catch(function () { return null; });
+            });
+            return Promise.all([].concat(apptImgPromises, medImgPromises)).then(function (urls) {
+                lastData.forEach(function (appt, i) { output.appendChild(renderCard(appt, urls[i])); });
+                lastMedData.forEach(function (med, i) { medOutput.appendChild(renderMedCard(med, urls[n + i])); });
+                medHeading.textContent = 'Medications';
+                countEl.textContent = lastData.length + ' appointment(s), ' + lastMedData.length + ' medication(s) in profile.';
+                countEl.classList.add('muted');
+                btn.disabled = false;
+            });
+        }).catch(function () {
+            countEl.textContent = 'Appointments generated. Medications unavailable (check network / openFDA).';
             countEl.classList.add('muted');
             btn.disabled = false;
+            Promise.all(apptImgPromises).then(function (urls) {
+                lastData.forEach(function (appt, i) { output.appendChild(renderCard(appt, urls[i])); });
+            });
         });
     };
 
