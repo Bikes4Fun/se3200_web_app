@@ -27,10 +27,12 @@
         card.className = 'card medication-card';
         var img = photoUrl ? '<img src="' + photoUrl + '" alt="" class="card-photo">' : '';
         var fda = med.fda || {};
-        var purpose = fda.purpose ? '<p class="fda-info"><strong>Uses:</strong> ' + escapeHtml(fda.purpose.slice(0, 200)) + (fda.purpose.length > 200 ? '…' : '') + '</p>' : '';
-        var dosage = fda.dosage_and_administration ? '<p class="fda-info"><strong>Dosage:</strong> ' + escapeHtml(fda.dosage_and_administration.slice(0, 200)) + (fda.dosage_and_administration.length > 200 ? '…' : '') + '</p>' : '';
-        var warnings = fda.warnings ? '<p class="fda-info med-warnings"><strong>Warnings:</strong> ' + escapeHtml(fda.warnings.slice(0, 150)) + (fda.warnings.length > 150 ? '…' : '') + '</p>' : '';
-        card.innerHTML = img + '<h2>' + escapeHtml(med.name) + '</h2><p><strong>Schedule:</strong> ' + (med.schedule || []).join(', ') + '</p>' + (fda.generic_name ? '<p><strong>Generic:</strong> ' + escapeHtml(fda.generic_name) + '</p>' : '') + purpose + dosage + warnings;
+        var schedule = (med.schedule || []).join(', ');
+        var generic = fda.generic_name ? '<p><strong>Generic:</strong> ' + escapeHtml(fda.generic_name) + '</p>' : '';
+        var brand = fda.brand_name && fda.brand_name !== med.name ? '<p><strong>Brand:</strong> ' + escapeHtml(fda.brand_name) + '</p>' : '';
+        var manufacturer = fda.manufacturer_name ? '<p><strong>Manufacturer:</strong> ' + escapeHtml(fda.manufacturer_name) + '</p>' : '';
+        var warningLine = fda.warnings ? '<p class="med-warnings"><strong>Note:</strong> ' + escapeHtml(fda.warnings.slice(0, 120).trim()) + (fda.warnings.length > 120 ? '…' : '') + '</p>' : '';
+        card.innerHTML = img + '<h2>' + escapeHtml(med.name) + '</h2><p><strong>Schedule:</strong> ' + schedule + '</p>' + generic + brand + manufacturer + warningLine;
         return card;
     }
 

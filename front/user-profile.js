@@ -1,4 +1,4 @@
-// User profile page: display user profile (same grid/card display as old generator) and "Generate random user" button.
+// User profile page: display current user profile (grid/card display). No demo/random logic here.
 
 (function () {
     function renderProfile() {
@@ -19,21 +19,35 @@
         }
     }
 
-    document.getElementById('generate-btn').addEventListener('click', function () {
-        var statusEl = document.getElementById('profile-status');
-        var btn = document.getElementById('generate-btn');
-        if (statusEl) statusEl.textContent = 'Generating…';
-        if (btn) btn.disabled = true;
-        window.runRandomUserGenerator().then(function (result) {
-            renderProfile();
-            if (statusEl) statusEl.textContent = 'Profile updated with ' + (result.eventsCount || 0) + ' appointment(s) and ' + (result.medicationsCount || 0) + ' medication(s).';
-            if (btn) btn.disabled = false;
-        }).catch(function () {
-            renderProfile();
-            if (statusEl) statusEl.textContent = 'Update failed. Try again.';
-            if (btn) btn.disabled = false;
-        });
-    });
+    var generateActions = document.getElementById('generate-actions');
+    var generateBtn = document.getElementById('generate-btn');
+    if (generateBtn) {
+        if (window.getLoggedInUser && window.getLoggedInUser() === 'demo_user') {
+            generateBtn.addEventListener('click', function () {
+                var statusEl = document.getElementById('profile-status');
+                if (statusEl) statusEl.textContent = 'Generating…';
+                generateBtn.disabled = true;
+                window.runRandomUserGenerator().then(function (result) {
+                    renderProfile();
+                    if (statusEl) statusEl.textContent = 'Profile updated with ' + (result.eventsCount || 0) + ' appointment(s) and ' + (result.medicationsCount || 0) + ' medication(s).';
+                    generateBtn.disabled = false;
+                }).catch(function () {
+                    renderProfile();
+                    if (statusEl) statusEl.textContent = 'Update failed. Try again.';
+                    generateBtn.disabled = false;
+                });
+            });
+        } else if (generateActions) {
+            generateActions.style.display = 'none';
+        }
+    }
 
-    renderProfile();
+    if (window.getLoggedInUser && window.getLoggedInUser() === 'demo_user' && typeof demoUserProfile !== 'undefined' && demoUserProfile.medications.length === 0 && demoUserProfile.calendar_events.length === 0 && window.runRandomUserGenerator) {
+        window.runRandomUserGenerator().then(function () {
+            if (window.saveDemoUserToSession) window.saveDemoUserToSession();
+            renderProfile();
+        });
+    } else {
+        renderProfile();
+    }
 })();

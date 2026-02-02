@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar &amp; Medications - Dementia TV</title>
+    <link rel="stylesheet" href="../front/style.css">
+</head>
+<body>
+    <nav id="main-nav"></nav>
+    <main>
+        <h1>Calendar &amp; Medications</h1>
+        <p>Calendar events and medications. Use User Profile to generate data.</p>
+        <div class="actions">
+            <button type="button" id="generate-btn" class="btn-primary">Generate</button>
+            <button type="button" id="export-btn" class="btn-secondary">Export JSON</button>
+        </div>
+        <p id="card-count" class="muted"></p>
+        <h2 id="med-heading" class="section-heading"></h2>
+        <div id="output" class="events-grid"></div>
+        <h2 class="section-heading">Medications</h2>
+        <div id="med-output" class="medications-grid"></div>
+    </main>
+    <script src="../front/app.js"></script>
+    <script src="demo_user.js"></script>
+    <script src="../demo_user/session-bootstrap.js"></script>
+    <script src="../back/search-medications.js"></script>
+    <script src="generator.js"></script>
+</body>
+</html>

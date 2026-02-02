@@ -10,8 +10,8 @@
     <nav id="main-nav"></nav>
     <main>
         <h1>User Profile</h1>
-        <p>Demo user data. Use "Generate random user" to populate with random appointments and medications.</p>
-        <div class="actions">
+        <p>View and manage the current user's profile.</p>
+        <div class="actions" id="generate-actions">
             <button type="button" id="generate-btn" class="btn-primary">Generate random user</button>
         </div>
         <p id="profile-status" class="muted"></p>
@@ -26,10 +26,11 @@
         </div>
     </main>
     <script src="app.js"></script>
-    <script src="demo_user.js"></script>
+    <script src="../demo_user/demo_user.js"></script>
+    <script src="../demo_user/session-bootstrap.js"></script>
     <script src="../back/search-medications.js"></script>
     <script src="profile-display.js"></script>
-    <script src="random-user-generator.js"></script>
+    <script src="../demo_user/random-user-generator.js"></script>
     <script src="user-profile.js"></script>
 </body>
 </html>
