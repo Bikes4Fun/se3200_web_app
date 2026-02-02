@@ -78,6 +78,7 @@
             demoUserProfile.medications = list.map(function (m) {
                 return { name: m.name, schedule: randomSchedule(), fda: m.fda || {} };
             });
+            if (window.saveDemoUserToSession) window.saveDemoUserToSession();
             return { eventsCount: appointments.length, medicationsCount: demoUserProfile.medications.length };
         }).catch(function () {
             return { eventsCount: appointments.length, medicationsCount: 0 };
