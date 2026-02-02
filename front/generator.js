@@ -115,6 +115,21 @@ const SCHEDULE_TIMES = ['06:00', '08:00', '12:00', '14:00', '18:00', '20:00'];
         btn.disabled = true;
 
         lastData = Array.from({ length: n }, buildAppointment);
+        demoUserProfile.calendar_events = lastData.map(function (a, i) {
+            return {
+                id: 'demo-' + Date.now() + '-' + i,
+                user_id: demoUserProfile.user_id,
+                title: a.title,
+                description: null,
+                start_time: a.start_time,
+                end_time: a.end_time,
+                location: a.location,
+                driver_name: a.driver_name,
+                driver_contact_id: null,
+                pickup_time: a.pickup_time,
+                leave_time: a.leave_time
+            };
+        });
         const apptImgPromises = lastData.map(function () {
             return fetch('https://picsum.photos/80/80').then(function (r) { return r.blob(); }).then(function (b) { return URL.createObjectURL(b); }).catch(function () { return null; });
         });
@@ -126,6 +141,7 @@ const SCHEDULE_TIMES = ['06:00', '08:00', '12:00', '14:00', '18:00', '20:00'];
             const toAdd = searchResults.map(function (m) {
                 return { name: m.name, schedule: randomSchedule(), fda: m.fda || {} };
             });
+            demoUserProfile.medications = toAdd;
             lastMedData = toAdd;
             const medImgPromises = lastMedData.map(function () {
                 return fetch('https://picsum.photos/80/80').then(function (r) { return r.blob(); }).then(function (b) { return URL.createObjectURL(b); }).catch(function () { return null; });
