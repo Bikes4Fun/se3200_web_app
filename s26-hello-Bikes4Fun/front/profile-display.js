@@ -1,0 +1,62 @@
+// Shared: render demoUserProfile calendar_events and medications in the same grid/card format.
+// Used by User Profile (and optionally Calendar & Medications view).
+
+(function () {
+    var PHOTO_SIZE = 40;
+
+    function escapeHtml(s) {
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+    }
+
+    function renderEventCard(evt, photoUrl) {
+        var card = document.createElement('div');
+        card.className = 'card event-card';
+        var img = photoUrl ? '<img src="' + photoUrl + '" alt="" class="card-photo">' : '';
+        var title = evt.title || '';
+        var when = (evt.start_time && evt.end_time) ? evt.start_time + ' – ' + evt.end_time : '';
+        var where = evt.location || '';
+        var driver = evt.driver_name ? 'Driver: ' + evt.driver_name + (evt.leave_time ? ' (leave ' + evt.leave_time + ')' : '') : 'Self';
+        card.innerHTML = img + '<h2>' + escapeHtml(title) + '</h2><p><strong>When:</strong> ' + escapeHtml(when) + '</p><p><strong>Where:</strong> ' + escapeHtml(where) + '</p><p>' + escapeHtml(driver) + '</p>';
+        return card;
+    }
+
+    function renderMedicationCard(med, photoUrl) {
+        var card = document.createElement('div');
+        card.className = 'card medication-card';
+        var img = photoUrl ? '<img src="' + photoUrl + '" alt="" class="card-photo">' : '';
+        var fda = med.fda || {};
+        var schedule = (med.schedule || []).join(', ');
+        var generic = fda.generic_name ? '<p><strong>Generic:</strong> ' + escapeHtml(fda.generic_name) + '</p>' : '';
+        var brand = fda.brand_name && fda.brand_name !== med.name ? '<p><strong>Brand:</strong> ' + escapeHtml(fda.brand_name) + '</p>' : '';
+        var manufacturer = fda.manufacturer_name ? '<p><strong>Manufacturer:</strong> ' + escapeHtml(fda.manufacturer_name) + '</p>' : '';
+        var warningLine = fda.warnings ? '<p class="med-warnings"><strong>Note:</strong> ' + escapeHtml(fda.warnings.slice(0, 120).trim()) + (fda.warnings.length > 120 ? '…' : '') + '</p>' : '';
+        card.innerHTML = img + '<h2>' + escapeHtml(med.name) + '</h2><p><strong>Schedule:</strong> ' + schedule + '</p>' + generic + brand + manufacturer + warningLine;
+        return card;
+    }
+
+    function fetchPhoto() {
+        return fetch('https://picsum.photos/' + PHOTO_SIZE + '/' + PHOTO_SIZE).then(function (r) { return r.blob(); }).then(function (b) { return URL.createObjectURL(b); }).catch(function () { return null; });
+    }
+
+    function renderProfileGrid(eventsEl, medsEl) {
+        if (!eventsEl || !medsEl || typeof demoUserProfile === 'undefined') return;
+        var events = demoUserProfile.calendar_events || [];
+        var meds = demoUserProfile.medications || [];
+        eventsEl.innerHTML = '';
+        medsEl.innerHTML = '';
+        events.forEach(function (evt) {
+            fetchPhoto().then(function (url) {
+                eventsEl.appendChild(renderEventCard(evt, url));
+            });
+        });
+        meds.forEach(function (med) {
+            fetchPhoto().then(function (url) {
+                medsEl.appendChild(renderMedicationCard(med, url));
+            });
+        });
+    }
+
+    window.ProfileDisplay = { renderProfileGrid: renderProfileGrid };
+})();
