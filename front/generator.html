@@ -1,25 +1,24 @@
-<!-- Project 2: Random Generator -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo Data Generator - Dementia TV</title>
+    <title>Calendar &amp; Medications - Dementia TV</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav id="main-nav"></nav>
     <main>
-        <h1>Demo Data Generator</h1>
-        <p>Generate random appointments for TV app testing. Data matches the calendar_events schema.</p>
-        <div class="actions">
-            <button type="button" id="generate-btn" class="btn-primary">Generate</button>
+        <h1>Calendar &amp; Medications</h1>
+        <p>Demo user calendar events and medications. Use User Profile to generate random data.</p>
+        <p id="card-count" class="muted"></p>
+        <h2 class="section-heading">Calendar events</h2>
+        <div id="events-output" class="events-grid"></div>
+        <h2 class="section-heading">Medications</h2>
+        <div id="medications-output" class="medications-grid"></div>
+        <div class="actions" style="margin-top: 1rem;">
             <button type="button" id="export-btn" class="btn-secondary">Export JSON</button>
         </div>
-        <p id="card-count" class="muted"></p>
-        <div id="output" class="generator-grid"></div>
-        <h2 id="med-heading" class="generator-med-heading" style="margin-top: 2rem;"></h2>
-        <div id="med-output" class="generator-grid"></div>
     </main>
     <script src="app.js"></script>
     <script src="demo_user.js"></script>
