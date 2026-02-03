@@ -6,8 +6,9 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello World</p>"
 
-def get_name():
-    return "name"
+@app.route("/index")
+def index():
+    return "<p>index test<p>"
 
 def run():
     app.run(port=8000, host='0.0.0.0')
