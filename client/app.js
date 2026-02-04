@@ -170,6 +170,7 @@ initNav();
 })();
 
 // Current user: identify and load (demo = sessionStorage). Replace with real auth when moving off demo.
+// TODO: session storage broke? 
 (function () {
     var LOGGED_IN_KEY = 'loggedInUser';
     window.getCurrentUserId = function () { return sessionStorage.getItem(LOGGED_IN_KEY); };
