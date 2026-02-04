@@ -1,17 +1,4 @@
-// All things demo user
-
-// Create Demo user profile: same structure as senior project (user + calendar_events + medications + settings).
-
-var defaultSettings = {
-    highContrast: false,
-    largeText: false,
-    reducedMotion: false,
-    homeLayout: 'horizontal',
-    clockProportion: 0.5,
-    clockBg: '#1e3a5f',
-    medBg: '#2d4a3e',
-    eventsBg: '#4a3a2d'
-};
+// All things demo user — profile store; 
 
 var SESSION_KEY = 'demoUserProfile';
 
@@ -19,7 +6,7 @@ var userProfile = {
     user_id: 'demo_user',
     medications: [],
     calendar_events: [],
-    settings: Object.assign({}, defaultSettings)
+    settings: {}   // populated if user changes Settings from CSS defaults. TODO: I don't think this is working? 
 };
 
 function loadDemoUserFromSession() {
@@ -29,7 +16,7 @@ function loadDemoUserFromSession() {
             var data = JSON.parse(raw);
             if (Array.isArray(data.medications)) userProfile.medications = data.medications;
             if (Array.isArray(data.calendar_events)) userProfile.calendar_events = data.calendar_events;
-            if (data.settings && typeof data.settings === 'object') userProfile.settings = Object.assign({}, defaultSettings, data.settings);
+            if (data.settings && typeof data.settings === 'object') userProfile.settings = data.settings;
         }
     } catch (e) {}
 }
@@ -48,59 +35,9 @@ window.userProfile = userProfile;
 window.loadDemoUserFromSession = loadDemoUserFromSession;
 window.saveDemoUserToSession = saveDemoUserToSession;
 
-// All things demo user
-
-// Create Demo user profile: same structure as senior project (user + calendar_events + medications + settings).
-// Generate random user data
 
 
-var defaultSettings = {
-    highContrast: false,
-    largeText: false,
-    reducedMotion: false,
-    homeLayout: 'horizontal',
-    clockProportion: 0.5,
-    clockBg: '#1e3a5f',
-    medBg: '#2d4a3e',
-    eventsBg: '#4a3a2d'
-};
-
-var SESSION_KEY = 'demoUserProfile';
-
-var userProfile = {
-    user_id: 'demo_user',
-    medications: [],
-    calendar_events: [],
-    settings: Object.assign({}, defaultSettings)
-};
-
-function loadDemoUserFromSession() {
-    try {
-        var raw = sessionStorage.getItem(SESSION_KEY);
-        if (raw) {
-            var data = JSON.parse(raw);
-            if (Array.isArray(data.medications)) userProfile.medications = data.medications;
-            if (Array.isArray(data.calendar_events)) userProfile.calendar_events = data.calendar_events;
-            if (data.settings && typeof data.settings === 'object') userProfile.settings = Object.assign({}, defaultSettings, data.settings);
-        }
-    } catch (e) {}
-}
-
-function saveDemoUserToSession() {
-    try {
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify({
-            medications: userProfile.medications,
-            calendar_events: userProfile.calendar_events,
-            settings: userProfile.settings
-        }));
-    } catch (e) {}
-}
-
-window.userProfile = userProfile;
-window.loadDemoUserFromSession = loadDemoUserFromSession;
-window.saveDemoUserToSession = saveDemoUserToSession;
-
-// TODO: probably move to a new file
+// Random user generator
 // Random user generator:
 //      knows the potential contents (MED_LIST, TITLES, etc.).
 //      Updates current user profile via getCurrentUserProfile(); returns a Promise that resolves when done.

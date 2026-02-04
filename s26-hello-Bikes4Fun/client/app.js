@@ -78,6 +78,7 @@ initNav();
         return card;
     }
 
+    // TODO: something somewhere needs to filter data from the medications database and only display whats most important.
     function renderMedicationCard(med, photoUrl) {
         var card = document.createElement('div');
         card.className = 'card medication-card';
