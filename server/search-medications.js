@@ -1,4 +1,4 @@
-// Search medications API — pure vanilla JS (no Node). Queries openFDA drug label API.
+// Search medications in openFDA drug label API.
 
 var SearchMedicationsAPI = (function () {
     var OPENFDA_BASE = 'https://api.fda.gov/drug/label.json';
