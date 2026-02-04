@@ -49,7 +49,7 @@ window.saveDemoUserToSession = saveDemoUserToSession;
         'Sertraline', 'Citalopram', 'Escitalopram', 'Mirtazapine', 'Trazodone', 'Quetiapine', 'Risperidone',
         'Olanzapine', 'Haloperidol', 'Buspirone', 'Melatonin', 'Lorazepam', 'Clonazepam', 'Zolpidem',
         'Lisinopril', 'Losartan', 'Metoprolol', 'Amlodipine', 'Atorvastatin', 'Simvastatin', 'Aspirin',
-        'Clopidogrel', 'Metformin', 'Insulin glargine', 'Levothyroxine', 'Furosemide',
+        'Clopidogrel', 'Metformin', 'Insulin', 'Levothyroxine', 'Furosemide',
         'Hydrochlorothiazide', 'Omeprazole', 'Pantoprazole', 'Acetaminophen', 'Gabapentin', 'Oxybutynin',
         'Tamsulosin', 'Finasteride', 'Vitamin D', 'Calcium carbonate', 'Senna',
         'Polyethylene glycol', 'Albuterol'
@@ -137,14 +137,14 @@ window.saveDemoUserToSession = saveDemoUserToSession;
                 medications: profile.medications,
                 generated_at: new Date().toISOString()
             };
-            try {
-                var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-                var a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'user-profile-generated.json';
-                a.click();
-                URL.revokeObjectURL(a.href);
-            } catch (e) {}
+            // try {
+            //     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            //     var a = document.createElement('a');
+            //     a.href = URL.createObjectURL(blob);
+            //     a.download = 'user-profile-generated.json';
+            //     a.click();
+            //     URL.revokeObjectURL(a.href);
+            // } catch (e) {}
             return { eventsCount: appointments.length, medicationsCount: profile.medications.length };
         }).catch(function () {
             return { eventsCount: appointments.length, medicationsCount: 0 };

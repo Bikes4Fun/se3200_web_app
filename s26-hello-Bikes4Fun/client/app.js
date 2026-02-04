@@ -168,3 +168,13 @@ initNav();
     //     renderProfile();
     // }
 })();
+
+// Current user: identify and load (demo = sessionStorage). Replace with real auth when moving off demo.
+(function () {
+    var LOGGED_IN_KEY = 'loggedInUser';
+    window.getCurrentUserId = function () { return sessionStorage.getItem(LOGGED_IN_KEY); };
+    window.setCurrentUserId = function (id) { sessionStorage.setItem(LOGGED_IN_KEY, id); };
+    window.getCurrentUserProfile = function () { return window.userProfile || null; };
+    if (!window.getCurrentUserId()) window.setCurrentUserId('demo_user');
+    if (window.getCurrentUserId() === 'demo_user' && typeof window.loadDemoUserFromSession === 'function') window.loadDemoUserFromSession();
+})();
