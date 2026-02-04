@@ -45,6 +45,11 @@ function getFormValues() {
 function saveSettings() {
     const settings = getFormValues();
     DataService.set('displaySettings', settings);
+    var profile = window.getCurrentUserProfile && window.getCurrentUserProfile();
+    if (profile) {
+        profile.settings = settings;
+        if (window.saveDemoUserToSession) window.saveDemoUserToSession();
+    }
     alert('Settings saved!');
     console.log('Settings saved:', settings);
 }
