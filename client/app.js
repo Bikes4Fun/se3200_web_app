@@ -100,9 +100,10 @@ initNav();
     }
 
     function renderProfileGrid(eventsEl, medsEl) {
-        if (!eventsEl || !medsEl || typeof userProfile === 'undefined') return;
-        var events = userProfile.calendar_events || [];
-        var meds = userProfile.medications || [];
+        var profile = window.getCurrentUserProfile && window.getCurrentUserProfile();
+        if (!eventsEl || !medsEl || !profile) return;
+        var events = profile.calendar_events || [];
+        var meds = profile.medications || [];
         eventsEl.innerHTML = '';
         medsEl.innerHTML = '';
         events.forEach(function (evt) {
@@ -125,8 +126,8 @@ initNav();
     var profileEventsEl = document.getElementById('profile-events');
     if (!profileEventsEl) return;
     function renderProfile() {
-        if (typeof userProfile === 'undefined') return;
-        var p = userProfile;
+        var p = window.getCurrentUserProfile && window.getCurrentUserProfile();
+        if (!p) return;
         var settings = p.settings || {};
         var userEl = document.getElementById('profile-user-id');
         var settingsEl = document.getElementById('profile-settings');
@@ -136,7 +137,9 @@ initNav();
     }
 
     var generateBtn = document.getElementById('generate-btn');
+    var generateActions = document.getElementById('generate-actions');
     if (generateBtn) {
+        if (window.getCurrentUserId && window.getCurrentUserId() !== 'demo_user' && generateActions) generateActions.style.display = 'none';
         generateBtn.addEventListener('click', function () {
             var statusEl = document.getElementById('profile-status');
             if (statusEl) statusEl.textContent = 'Generating…';
@@ -153,7 +156,7 @@ initNav();
         });
     }
 
-    // TODO: should this be somewhere else?
+    // TODO: this should be somewhere else?
     // places in 'demo user' for now to test
     // if (window.getLoggedInUser && window.getLoggedInUser() === 'demo_user' && typeof userProfile !== 'undefined' && userProfile.medications.length === 0 && userProfile.calendar_events.length === 0 && window.runRandomUserGenerator) {
     //     window.runRandomUserGenerator().then(function () {

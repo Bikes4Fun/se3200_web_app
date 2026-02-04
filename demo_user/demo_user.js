@@ -1,5 +1,6 @@
-// Demo user profile — same structure as senior project (user + calendar_events + medications + settings).
-// In-memory; persists in sessionStorage for the current tab so it survives navigation.
+// All things demo user
+
+// Create Demo user profile: same structure as senior project (user + calendar_events + medications + settings).
 
 var defaultSettings = {
     highContrast: false,
@@ -43,22 +44,175 @@ function saveDemoUserToSession() {
     } catch (e) {}
 }
 
-loadDemoUserFromSession();
+window.userProfile = userProfile;
+window.loadDemoUserFromSession = loadDemoUserFromSession;
 window.saveDemoUserToSession = saveDemoUserToSession;
 
-// Session: default logged-in user (rest of app treats it as any user)
-(function () {
-    var LOGGED_IN_KEY = 'loggedInUser';
-    window.getLoggedInUser = function () { return sessionStorage.getItem(LOGGED_IN_KEY); };
-    window.setLoggedInUser = function (id) { sessionStorage.setItem(LOGGED_IN_KEY, id); };
-    if (!window.getLoggedInUser()) window.setLoggedInUser('demo_user');
-})();
+// All things demo user
 
-if (window.getLoggedInUser && window.getLoggedInUser() === 'demo_user' && typeof userProfile !== 'undefined' && userProfile.medications.length === 0 && userProfile.calendar_events.length === 0 && window.runRandomUserGenerator) {
-    window.runRandomUserGenerator().then(function () {
-        if (window.saveDemoUserToSession) window.saveDemoUserToSession();
-        renderProfile();
-    });
-} else {
-    renderProfile();
+// Create Demo user profile: same structure as senior project (user + calendar_events + medications + settings).
+// Generate random user data
+
+
+var defaultSettings = {
+    highContrast: false,
+    largeText: false,
+    reducedMotion: false,
+    homeLayout: 'horizontal',
+    clockProportion: 0.5,
+    clockBg: '#1e3a5f',
+    medBg: '#2d4a3e',
+    eventsBg: '#4a3a2d'
+};
+
+var SESSION_KEY = 'demoUserProfile';
+
+var userProfile = {
+    user_id: 'demo_user',
+    medications: [],
+    calendar_events: [],
+    settings: Object.assign({}, defaultSettings)
+};
+
+function loadDemoUserFromSession() {
+    try {
+        var raw = sessionStorage.getItem(SESSION_KEY);
+        if (raw) {
+            var data = JSON.parse(raw);
+            if (Array.isArray(data.medications)) userProfile.medications = data.medications;
+            if (Array.isArray(data.calendar_events)) userProfile.calendar_events = data.calendar_events;
+            if (data.settings && typeof data.settings === 'object') userProfile.settings = Object.assign({}, defaultSettings, data.settings);
+        }
+    } catch (e) {}
 }
+
+function saveDemoUserToSession() {
+    try {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+            medications: userProfile.medications,
+            calendar_events: userProfile.calendar_events,
+            settings: userProfile.settings
+        }));
+    } catch (e) {}
+}
+
+window.userProfile = userProfile;
+window.loadDemoUserFromSession = loadDemoUserFromSession;
+window.saveDemoUserToSession = saveDemoUserToSession;
+
+// TODO: probably move to a new file
+// Random user generator:
+//      knows the potential contents (MED_LIST, TITLES, etc.).
+//      Updates current user profile via getCurrentUserProfile(); returns a Promise that resolves when done.
+
+(function () {
+    function getProfile() { return window.getCurrentUserProfile && window.getCurrentUserProfile(); }
+    var MED_LIST = [
+        'Donepezil', 'Rivastigmine', 'Galantamine', 'Memantine', 'Namzaric', 'Lecanemab',
+        'Sertraline', 'Citalopram', 'Escitalopram', 'Mirtazapine', 'Trazodone', 'Quetiapine', 'Risperidone',
+        'Olanzapine', 'Haloperidol', 'Buspirone', 'Melatonin', 'Lorazepam', 'Clonazepam', 'Zolpidem',
+        'Lisinopril', 'Losartan', 'Metoprolol', 'Amlodipine', 'Atorvastatin', 'Simvastatin', 'Aspirin',
+        'Clopidogrel', 'Metformin', 'Insulin glargine', 'Levothyroxine', 'Furosemide',
+        'Hydrochlorothiazide', 'Omeprazole', 'Pantoprazole', 'Acetaminophen', 'Gabapentin', 'Oxybutynin',
+        'Tamsulosin', 'Finasteride', 'Vitamin D', 'Calcium carbonate', 'Senna',
+        'Polyethylene glycol', 'Albuterol'
+    ];
+    var SCHEDULE_TIMES = ['06:00', '08:00', '12:00', '14:00', '18:00', '20:00'];
+    var TITLES = ['Dr. Smith - Cardiology', 'Dr. Jones - Primary Care', 'Grocery shopping', 'Pharmacy pickup', 'Physical therapy', 'Dentist - Cleaning', 'Family visit', 'Lab work'];
+    var LOCATIONS = ['123 Main St', '456 Oak Ave', '789 Medical Plaza', 'Downtown Pharmacy', 'Care Center'];
+    var DRIVERS = ['Sarah', 'Mike', 'James', 'Maria', null];
+
+    // Random: one element from array
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    // Random: n distinct elements (Fisher–Yates shuffle then slice)
+    function pickN(arr, n) {
+        var copy = arr.slice();
+        for (var i = copy.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = copy[i]; copy[i] = copy[j]; copy[j] = t;
+        }
+        return copy.slice(0, n);
+    }
+    // Random: 1–4 schedule times from SCHEDULE_TIMES
+    function randomSchedule() {
+        var times = SCHEDULE_TIMES.slice().sort(function () { return Math.random() - 0.5; });
+        return times.slice(0, 1 + Math.floor(Math.random() * 3)).sort();
+    }
+    // Random: day within daysFromNow, hour 9–16, :00 or :30
+    function randomDate(daysFromNow) {
+        var d = new Date();
+        d.setDate(d.getDate() + Math.floor(Math.random() * daysFromNow));
+        d.setHours(9 + Math.floor(Math.random() * 8), Math.random() < 0.5 ? 0 : 30, 0, 0);
+        return d;
+    }
+    function toISO(d) { return d.toISOString().slice(0, 19).replace('T', ' '); }
+    function buildAppointment() {
+        var start = randomDate(14);
+        var end = new Date(start.getTime() + 60 * 60 * (0.5 + Math.random())); // Random duration 0.5–1.5 h
+        var driver = pick(DRIVERS); // Random driver or null
+        var leave = driver ? new Date(start.getTime() - 30 * 60 * 1000) : null;
+        var pickup = driver ? new Date(start.getTime() - 15 * 60 * 1000) : null;
+        return {
+            title: pick(TITLES),      // Random from TITLES
+            start_time: toISO(start),
+            end_time: toISO(end),
+            location: pick(LOCATIONS), // Random from LOCATIONS
+            driver_name: driver,
+            pickup_time: pickup ? toISO(pickup) : null,
+            leave_time: leave ? toISO(leave) : null
+        };
+    }
+
+    function run() {
+        var profile = getProfile();
+        if (!profile) return Promise.reject(new Error('No user profile'));
+        var appointments = [];
+        for (var i = 0; i < 3; i++) appointments.push(buildAppointment());
+        profile.calendar_events = appointments.map(function (a, i) {
+            return {
+                id: 'demo-' + Date.now() + '-' + i,
+                user_id: profile.user_id,
+                title: a.title,
+                description: null,
+                start_time: a.start_time,
+                end_time: a.end_time,
+                location: a.location,
+                driver_name: a.driver_name,
+                driver_contact_id: null,
+                pickup_time: a.pickup_time,
+                leave_time: a.leave_time
+            };
+        });
+        var medNames = pickN(MED_LIST, 3); // Random 3 meds from MED_LIST
+        return SearchMedicationsAPI.search(medNames).then(function (data) {
+            var list = (data && data.medications) || [];
+            profile.medications = list.map(function (m) {
+                var fda = m.fda || {};
+                var opts = fda.dose_options && fda.dose_options.length ? fda.dose_options : [];
+                var selected_dose = opts.length ? pick(opts) : null; // User-selected dose (random for demo)
+                var display_name = fda.brand_name || m.name; // User chooses how to display (brand for demo)
+                return { name: m.name, display_name: display_name, schedule: randomSchedule(), selected_dose: selected_dose, fda: fda };
+            });
+            if (window.saveDemoUserToSession) window.saveDemoUserToSession();
+            var payload = {
+                user_id: profile.user_id,
+                calendar_events: profile.calendar_events,
+                medications: profile.medications,
+                generated_at: new Date().toISOString()
+            };
+            try {
+                var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'user-profile-generated.json';
+                a.click();
+                URL.revokeObjectURL(a.href);
+            } catch (e) {}
+            return { eventsCount: appointments.length, medicationsCount: profile.medications.length };
+        }).catch(function () {
+            return { eventsCount: appointments.length, medicationsCount: 0 };
+        });
+    }
+
+    window.runRandomUserGenerator = run;
+})();
