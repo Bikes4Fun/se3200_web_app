@@ -5,7 +5,7 @@
 | Due | Assignment | Portal Feature |
 |-----|------------|----------------|
 | Done | Project 1: Hello JS | Dashboard |
-| Feb 2 | Project 2: Random Generation | Demo Data Generator |
+| Done | Project 2: Random Generation | Demo Data Generator |
 | Feb 23 | Project 3: Message Log | Medication Dose Log |
 | Mar 25 | Project 4: Resourceful | Calendar CRUD |
 | Apr 8 | Deployment | Deploy with partner |
@@ -13,37 +13,49 @@
 
 ---
 
-## Issue 1: Project 2 Demo Data Generator, Jan 28
+## Current State (as of Feb 2025)
 
-**Feature:** Demo Data Generator - creates random appointments for TV app testing
+**Running the app:** Open `client/index.html` in a browser (file://) or serve `client/` (e.g. `python -m http.server 8000` from repo root → http://localhost:8000/client/). No backend required.
 
-**Integration:** Generates test data matching Dementia TV's `calendar_events` schema
+**What’s built:**
+- **Dashboard** (`client/index.html`) — intro, photos (client/img/), Ideas list
+- **User Profile** (`client/user-profile.html`) — "Generate random user" button; displays calendar events + medications as cards; exports `user-profile-generated.json`
+- **Settings** (`client/settings.html`) — display preferences (contrast, text size, layout, colors); saves to localStorage + demo user profile
+- **Demo user flow** — Single load point in `app.js` (getCurrentUserId, getCurrentUserProfile). Demo user identified and profile loaded from sessionStorage; profile + random generator live in `demo_user/demo_user.js`. Medications from openFDA (brand as display name, generic in parens, selected dose, side effects, drug interactions). Full FDA details in exported JSON; UI truncates for cards.
+
+**Planned next:** Project 3 (Medication Dose Log), then Project 4 (Calendar CRUD + backend).
+
+---
+
+## Issue 1: Project 2 Demo Data Generator — DONE
+
+**Feature:** Demo Data Generator - creates random appointments and medications for TV app testing
+
+**Integration:** Generates test data matching Dementia TV's `calendar_events` schema; medications from openFDA with full label details
 
 **What it does:**
 - Generate random appointments (title, start_time, end_time, location, driver_name, pickup_time, leave_time)
-- Fetch random placeholder photos for contacts
-- Display generated data as styled cards
-- Export JSON matching TV's demo data format
+- Generate random medications via openFDA API (brand display name, generic in parens, selected dose, schedules)
+- Fetch random placeholder photos (picsum.photos) for cards
+- Display generated data as styled cards on User Profile page
+- Export JSON (user-profile-generated.json) with full medication details
 
 **Requirements Checklist:**
-- [ ] DOM querying — `getElementById` for generate button, output container
-- [ ] DOM manipulation — show loading state, update card count
-- [ ] DOM insertion — `createElement` + `appendChild` to build appointment cards
-- [ ] Events — "Generate" button creates new random appointments
-- [ ] Randomness — `Math.random()` for dates, times, pick from arrays
-- [ ] Data — arrays of doctor names, locations, driver names as templates
-- [ ] Ajax — fetch placeholder image API (e.g., `picsum.photos` for contact photos)
-- [ ] Exceed 8-Ball — generates multiple items, styled cards, export button
-- [ ] Professional styling — appointment cards with date/time formatting
+- [x] DOM querying — generate button, output containers (profile-events, profile-medications)
+- [x] DOM manipulation — loading state, card count / status message
+- [x] DOM insertion — createElement + appendChild for event and medication cards
+- [x] Events — "Generate random user" button creates new random appointments + medications
+- [x] Randomness — Math.random(), pick/pickN for titles, locations, drivers, schedules, doses
+- [x] Data — arrays of titles, locations, drivers, MED_LIST, SCHEDULE_TIMES as templates
+- [x] Ajax — fetch picsum.photos for card images; fetch openFDA API (server/search-medications.js)
+- [x] Exceed — multiple items, styled cards, export JSON download
+- [x] Professional styling — appointment and medication cards with date/time, dose, truncation on front
 
 **TV Integration Fields:**
-- `title` — "Dr. Smith - Cardiology", "Grocery shopping", etc.
-- `start_time`, `end_time` — ISO timestamps
-- `location` — random from address array
-- `driver_name` — random from names array (or null for self-drive)
-- `pickup_time`, `leave_time` — calculated from start_time
+- `title`, `start_time`, `end_time`, `location`, `driver_name`, `pickup_time`, `leave_time` — as specified
+- Medications: display_name (brand), generic in parens, selected_dose, schedule, full fda in JSON
 
-**Files:** `generator.html`, `generator.js`
+**Files:** `client/user-profile.html`, `client/app.js` (nav, DataService, profile grid + user-loader block), `demo_user/demo_user.js` (profile store + random generator), `server/search-medications.js` (openFDA, client-side)
 
 ---
 
@@ -192,19 +204,24 @@ CREATE TABLE users (
 
 ---
 
-## File Structure
+## File Structure (current)
+
 ```
 se3200_web_app/
-  index.html, generator.html, medications.html, calendar.html
-  login.html, register.html, settings.html
-  app.js, generator.js, medications.js, calendar.js, auth.js
-  style.css
-  meds.json
+  client/
+    index.html, user-profile.html, settings.html
+    app.js, settings.js, style.css
+    img/
+      mom_dad_landon.JPG, mom_sisto.JPG
+  demo_user/
+    demo_user.js          # profile store + random generator (appointments + meds)
+    random-user-generator.js   # (optional; generator also in demo_user.js)
   server/
-    app.py, database.py, doses.json
-    requirements.txt
-  README.md
+    search-medications.js     # openFDA API (runs in browser)
+  todo.md, create_issues.sh
 
-# Shared database (Project 4+):
-# ../senior_project/dementia_tv_python/lib/dementia_tv.db
+# Planned (Project 3+):
+# client/medications.html, medications.js; server/app.py, database.py, doses.json
+# client/calendar.html, calendar.js; login.html, register.html, auth.js
+# Shared database (Project 4+): ../senior_project/dementia_tv_python/lib/dementia_tv.db
 ```
