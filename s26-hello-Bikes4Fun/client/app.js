@@ -28,7 +28,7 @@ function initNav() {
         ).join('')}
     `;
     
-    // Add pop animation to nav links
+    // animation on nav links
     nav.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', function() {
             console.log('nav button was clicked');
@@ -38,7 +38,7 @@ function initNav() {
     });
 }
 
-// Data Service - LocalStorage wrapper (easy to swap to API later)
+// localStorage
 const DataService = {
     get(key) {
         const data = localStorage.getItem(key);
@@ -170,6 +170,7 @@ initNav();
 })();
 
 // Current user: identify and load (demo = sessionStorage). Replace with real auth when moving off demo.
+// TODO: session storage broke? 
 (function () {
     var LOGGED_IN_KEY = 'loggedInUser';
     window.getCurrentUserId = function () { return sessionStorage.getItem(LOGGED_IN_KEY); };
