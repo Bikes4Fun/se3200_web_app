@@ -14,7 +14,7 @@ var defaultSettings = {
 
 var SESSION_KEY = 'demoUserProfile';
 
-var demoUserProfile = {
+var userProfile = {
     user_id: 'demo_user',
     medications: [],
     calendar_events: [],
@@ -26,9 +26,9 @@ function loadDemoUserFromSession() {
         var raw = sessionStorage.getItem(SESSION_KEY);
         if (raw) {
             var data = JSON.parse(raw);
-            if (Array.isArray(data.medications)) demoUserProfile.medications = data.medications;
-            if (Array.isArray(data.calendar_events)) demoUserProfile.calendar_events = data.calendar_events;
-            if (data.settings && typeof data.settings === 'object') demoUserProfile.settings = Object.assign({}, defaultSettings, data.settings);
+            if (Array.isArray(data.medications)) userProfile.medications = data.medications;
+            if (Array.isArray(data.calendar_events)) userProfile.calendar_events = data.calendar_events;
+            if (data.settings && typeof data.settings === 'object') userProfile.settings = Object.assign({}, defaultSettings, data.settings);
         }
     } catch (e) {}
 }
@@ -36,9 +36,9 @@ function loadDemoUserFromSession() {
 function saveDemoUserToSession() {
     try {
         sessionStorage.setItem(SESSION_KEY, JSON.stringify({
-            medications: demoUserProfile.medications,
-            calendar_events: demoUserProfile.calendar_events,
-            settings: demoUserProfile.settings
+            medications: userProfile.medications,
+            calendar_events: userProfile.calendar_events,
+            settings: userProfile.settings
         }));
     } catch (e) {}
 }
@@ -46,3 +46,19 @@ function saveDemoUserToSession() {
 loadDemoUserFromSession();
 window.saveDemoUserToSession = saveDemoUserToSession;
 
+// Session: default logged-in user (rest of app treats it as any user)
+(function () {
+    var LOGGED_IN_KEY = 'loggedInUser';
+    window.getLoggedInUser = function () { return sessionStorage.getItem(LOGGED_IN_KEY); };
+    window.setLoggedInUser = function (id) { sessionStorage.setItem(LOGGED_IN_KEY, id); };
+    if (!window.getLoggedInUser()) window.setLoggedInUser('demo_user');
+})();
+
+if (window.getLoggedInUser && window.getLoggedInUser() === 'demo_user' && typeof userProfile !== 'undefined' && userProfile.medications.length === 0 && userProfile.calendar_events.length === 0 && window.runRandomUserGenerator) {
+    window.runRandomUserGenerator().then(function () {
+        if (window.saveDemoUserToSession) window.saveDemoUserToSession();
+        renderProfile();
+    });
+} else {
+    renderProfile();
+}
