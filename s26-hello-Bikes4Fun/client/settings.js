@@ -1,4 +1,6 @@
 // Settings page logic
+// TODO: something broke in here and it isn't saving to the user profile anymore / isn't updating
+
 
 const defaultSettings = {
     highContrast: false,
