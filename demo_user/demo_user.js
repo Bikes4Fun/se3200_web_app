@@ -49,7 +49,7 @@ window.saveDemoUserToSession = saveDemoUserToSession;
         'Sertraline', 'Citalopram', 'Escitalopram', 'Mirtazapine', 'Trazodone', 'Quetiapine', 'Risperidone',
         'Olanzapine', 'Haloperidol', 'Buspirone', 'Melatonin', 'Lorazepam', 'Clonazepam', 'Zolpidem',
         'Lisinopril', 'Losartan', 'Metoprolol', 'Amlodipine', 'Atorvastatin', 'Simvastatin', 'Aspirin',
-        'Clopidogrel', 'Metformin', 'Insulin glargine', 'Levothyroxine', 'Furosemide',
+        'Clopidogrel', 'Metformin', 'Insulin', 'Levothyroxine', 'Furosemide',
         'Hydrochlorothiazide', 'Omeprazole', 'Pantoprazole', 'Acetaminophen', 'Gabapentin', 'Oxybutynin',
         'Tamsulosin', 'Finasteride', 'Vitamin D', 'Calcium carbonate', 'Senna',
         'Polyethylene glycol', 'Albuterol'
