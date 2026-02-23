@@ -12,7 +12,8 @@
 const navLinks = [
     { href: 'index.html', label: 'Dashboard' },
     { href: 'user-profile.html', label: 'User Profile' },
-    { href: 'settings.html', label: 'Settings' }
+    { href: 'settings.html', label: 'Settings' },
+    { href: 'message_log.html', label: 'Message Log' }
 ];
 
 function initNav() {

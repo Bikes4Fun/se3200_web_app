@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Log</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="message_log.css">
+</head>
+<body>
+    <nav id="main-nav"></nav>
+    <div class="container">
+        <h1>📝 Message Log</h1>
+        
+        <div class="form-section">
+            <h2>Post a Message</h2>
+            <form id="messageForm">
+                <textarea id="messageInput" placeholder="Enter your message..." required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+
+        <div class="messages-section">
+            <h2>All Messages</h2>
+            <div id="messagesList"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="message_log.js"></script>
+</body>
+</html>
