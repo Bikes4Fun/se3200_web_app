@@ -4,11 +4,14 @@ const form = document.getElementById("messageForm");
 const input = document.getElementById("messageInput");
 const list = document.getElementById("messagesList");
 
+// Project 3 requirement: Fetch messages using Fetch API from GET /messages
 async function fetchMessages() {
     try {
+        // Project 3 requirement: Ajax request to retrieve messages from server API
         const response = await fetch(`${API_URL}/messages`);
         const messages = await response.json();
         
+        // Project 3 requirement: Display messages in order given by server
         if (messages.length === 0) {
             list.innerHTML = '<div class="empty">No messages yet</div>';
         } else {
@@ -27,6 +30,7 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// Project 3 requirement: Form submission handler
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -34,6 +38,7 @@ form.addEventListener("submit", async (e) => {
     if (!message) return;
     
     try {
+        // Project 3 requirement: Send message using Fetch API to POST /messages
         await fetch(`${API_URL}/messages`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -41,10 +46,12 @@ form.addEventListener("submit", async (e) => {
         });
         
         input.value = "";
+        // Project 3 requirement: Refresh list after server responds to POST request
         await fetchMessages();
     } catch (error) {
         alert("Error posting message");
     }
 });
 
+// Project 3 requirement: Load messages on page load
 fetchMessages();
