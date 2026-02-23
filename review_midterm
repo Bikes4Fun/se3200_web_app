@@ -1,0 +1,99 @@
+SE3200 REVIEW FOR MIDTERM
+What is JavaScript?
+What is the DOM?
+Know how to write an appropriately coded URL query string.
+DOM
+
+Querying
+document.querySelector()
+Selectors:
+tag:
+ID: '.'
+class: '#'
+etc.
+
+Use console.log() to verify successful queries.
+
+Manipulation
+el.innerHTML
+el.style.____
+
+Naming convention (background-color property is backgroundColor).
+el.classList.add()
+Insertion
+document.createElement()
+parentEl.appendChild(newEl)
+User Events
+Three parts: target element, event type, event handler function.
+el.onclick = function () { };
+Why is the event handler a function? May be called repeatedly (or never).
+JSON
+What is it? A notation for communing data. Analogy: sheet music.
+What is it not? A programming language (no variables, functions, loops).
+Why is it important? Interoperability between many programming languages.
+Simple example: https://en.wikipedia.org/wiki/JSON#Syntax Links to an external site.
+Data structures: objects and arrays
+Data types: strings, numbers (integers and floats), booleans, null
+Fetch API
+The fetch() function implements Ajax in JavaScript.
+A request is made to a server, and the server replies with a response.
+Asynchronous
+What is asynchronous communication?
+Root word: chrono (time)
+Contrast to synchronous communication:
+Synchronous means at the same time, or together in time.
+Analogy: calling someone on the phone.
+Asynchronous means not together in time.
+Analogy: texting someone.
+Contrast to concurrent/parallel programming:
+asynchronous does not mean concurrently or in parallel.
+Why is it important?
+Avoids code blocking while waiting for server responses.
+Avoids freezing/lagging UI (bad user experience).
+JSONBin.io
+Upload a JSON document using the web interface.
+Mark as public before saving each new document.
+Use the generated URL to make a fetch() request.
+
+idempotent:
+
+Server and Flask
+Client-server architectural model
+Purpose: centralization of data and logic.
+Advantages: accessibility and convenience for end users.
+HTTP protocol
+What is a protocol? Rules for communication.
+Requests and responses:
+Client-server diagram: client sends a request, server responds.
+Show text representations of a request and a response: MDN Links to an external site.
+What’s in a request?
+method (required: verb/action)
+path (required: noun/subject)
+headers (optional: metadata)
+body (optional: data)
+What’s in a response?
+status code (required: generally indicates success or failure)
+100s: informational, rarely used
+200s: successful
+300s: redirection, not used with APIs
+400s: client errors
+500s: server errors
+headers (optional: metadata)
+body (optional: data)
+REST
+What is it?
+A standard for interoperability between clients and servers.
+A “common way of doing things” for web API developers.
+Benefit: consistency and commonality between many different APIs.
+Provides a uniform interface for APIs:
+Method is the action: GET=retrieve, POST=create, PUT=update, etc.
+Path is the collection or member: /restaurants or /restaurants/123
+Collection is always the prefix and always pluralized.
+Reading: https://www.restapitutorial.com Links to an external site.
+CORS
+CORS is the exception to the rule; the rule is the same-origin policy.
+Purpose: protects users from malicious cross-site communication.
+Enforced by web browsers (not Postman), exceptions made by APIs.
+Reading: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS Links to an external site.
+Read through Simple requests, stop at Preflighted requests.
+Primary takeaway: the Access-Control-Allow-Origin response header.
