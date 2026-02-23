@@ -1,0 +1,59 @@
+HOW TO RUN THE DEMENTIA TV DASHBOARD (Main Project)
+====================================================
+
+Option A - From Terminal:
+open /Users/turtlesoup/Repos/se3200_web_app/personal_project_main/client/index.html
+
+Option B - From Browser:
+- Press Cmd + O (File > Open File)
+- Navigate to: /Users/turtlesoup/Repos/se3200_web_app/personal_project_main/client/index.html
+- Click Open
+
+Option C - From Finder:
+- Navigate to /Users/turtlesoup/Repos/se3200_web_app/personal_project_main/client/
+- Double-click index.html
+
+Note: This is a simple HTML page and doesn't require a server to run.
+
+
+HOW TO RUN THE MESSAGE LOG PROJECT
+====================================
+
+1. Start the Flask Server
+   In your terminal, run:
+   
+   cd /Users/turtlesoup/Repos/se3200_web_app/personal_project_main/server
+   python3 message_log_server.py
+   
+   The server will start on http://localhost:8080
+
+2. Open the HTML File in Your Browser
+   
+   Option A - From Terminal:
+   open /Users/turtlesoup/Repos/se3200_web_app/personal_project_main/client/message_log.html
+   
+   Option B - From Browser:
+   - Press Cmd + O (File > Open File)
+   - Navigate to: /Users/turtlesoup/Repos/se3200_web_app/personal_project_main/client/message_log.html
+   - Click Open
+   
+   Option C - From Finder:
+   - Navigate to /Users/turtlesoup/Repos/se3200_web_app/personal_project_main/client/
+   - Double-click message_log.html
+
+3. The application will load and automatically fetch messages from the server.
+   You can post new messages using the form, and they'll be saved to messages.txt
+
+TESTING WITH CURL
+=================
+
+Test GET request:
+curl http://localhost:8080/messages
+
+Test POST request:
+curl -X POST http://localhost:8080/messages \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Test message from curl"}'
+
+Test 404 error:
+curl http://localhost:8080/invalid-route
